@@ -1,0 +1,28 @@
+name: CML
+on: [pull_request]
+
+jobs:
+  train-and-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - uses: iterative/setup-cml@v2
+      - name: Insatall dependencies
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install -r requirements.txt
+      - name: Test with unittest and create report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python iris_prepare.py --test_size=0.25 --random_state=42 --save_dir=data
+          python iris_train.py --train_path=data/train.csv --save_dir=data
+          python iris_predict.py --test_path=data/test.csv --model_path=data/model.pickle --save_dir=data
+          python iris_test.py
+
+          # Create CML report
+          cat data/metrics.txt >> report.md
+          echo '![](data/confusion_matrix.png "Confusion Matrix")' >> report.md
+          cml comment create report.md
