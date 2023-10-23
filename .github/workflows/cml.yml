@@ -7,8 +7,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Insatall dependencies
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pip install -r requirements.txt
       - name: Test with unittest and create report
