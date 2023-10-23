@@ -14,6 +14,8 @@ jobs:
         run: |
           pip install -r requirements.txt
       - name: Test with unittest and create report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python iris_prepare.py --test_size=0.25 --random_state=42 --save_dir=data
           python iris_train.py --train_path=data/train.csv --save_dir=data
