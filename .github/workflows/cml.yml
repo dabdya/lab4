@@ -1,11 +1,13 @@
 name: CML
-on: [push, pull_request]
+on: [pull_request]
+
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
-    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - uses: iterative/setup-cml@v2
       - name: Insatall dependencies
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
